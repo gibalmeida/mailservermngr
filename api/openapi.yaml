@@ -1,0 +1,621 @@
+openapi: 3.0.3
+info:
+  title: "An API for an Database used by Exim Mail Server"
+  description: |-
+    This is an API specification used to manager a database that is used by an Exim4 server as your accounts and domains.
+  contact:
+    email: gibalmeida@gmail.com
+  version: 1.0.0
+tags:
+  - name: auth
+    description: Authentication
+  - name: domains
+    description: Domains
+  - name: domainsAliases
+    description: Domains Aliases
+  - name: accounts
+    description: Email Accounts
+  - name: addressesAliases
+    description: E-mail Adresses Aliases
+paths:
+  /getToken:
+    post:
+      tags:
+      - auth
+      summary: User Authentication
+      description: Obtains a JWT access token for calling this service's APIs
+      operationId: getToken
+      requestBody:
+        description: Access credentials
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Auth'
+        required: true
+      responses:
+        '200':
+          description: JWT Access Token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetTokenResponse'
+        '403':
+           description: Access denied           
+        default:
+          description: Unknown error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security: []
+
+  /domains:
+    get:
+      tags:
+      - domains
+      summary: "Get all email server domains"
+      description: Returns a list of all domains (except domains aliases) that the email server has configured to receive emails
+      operationId: getDomains
+      responses:
+        '200':
+          description: List of registered domains
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Domain'
+        default:
+          description: An unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+      - domains
+      summary: Add a new domain to the server
+      description: Add a new domain to the email server
+      operationId: createDomain
+      requestBody:
+        description: Create a new domain
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Domain'
+        required: true
+      responses:
+        '200':
+          description: The new domain has been created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Domain'
+        default:
+          description: An unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'  
+  /domains/{domain}:
+    delete:
+      tags:
+      - domains
+      summary: Delete a domain
+      description: Delete a domain from the email server
+      operationId: deleteDomain
+      parameters:
+        - name: domain
+          description: Domain that must be removed
+          in: path
+          required: true
+          schema:
+            type: string
+            example: example.com
+            
+      responses:
+        '204':
+          description: The domain has been deleted from the email server
+        default:
+          description: An unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /domains-aliases:
+    get:
+      tags:
+      - domainsAliases
+      summary: List of domain aliases
+      description: |-
+        Returns a list of domain aliases registered on the email server.
+        Domain alias is a way of having multiple domains pointing to the same domain.
+        For example, with the domain example.net being an alias for the domain example.com, 
+        any email address with @example.com can also receive email if sent to and address ended with @example.net.
+      operationId: getDomainsAliases
+      responses:
+        '200':
+          description: List of registered domains aliases
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DomainAlias'
+        default:
+          description: Unknown error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+      - domainsAliases
+      summary: Adds a new domain alias
+      description: Add a new domain alias to the email server
+      operationId: createDomainAlias
+      requestBody:
+        description: Create a new domain alias
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DomainAlias'
+        required: true
+      responses:
+        '200':
+          description: The new domain alias has been created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainAlias'
+        default:
+          description: An unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'                
+  /domains-aliases/{domain_alias}:
+    delete:
+      tags:
+      - domainsAliases
+      summary: Deletes a domain alias
+      description: Delete a domain alias from the email server
+      operationId: deleteDomainAlias
+      parameters:
+        - name: domain_alias
+          description: Domain alias that must be removed
+          in: path
+          required: true
+          schema:
+            type: string
+            example: example.net
+      responses:
+        '204':
+          description: The domain alias has been deleted from the email server
+        default:
+          description: An unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      
+  /accounts:
+    get:
+      tags:
+      - accounts
+      summary: Get a list of all email accounts
+      description: |-
+        Returns a list of all email accounts that are registered on the email server.
+      operationId: getAccounts
+      responses:
+        '200':
+          description: List of all registered email accounts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+      - accounts
+      summary: Add a new email account
+      description: Add a new email address to the email server
+      operationId: createAccount
+      requestBody:
+        description: Create a new email address
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewAccount'
+        required: true
+      responses:
+        '200':
+          description: The new email address has been created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewAccount'
+        default:
+          description: An unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+                
+  /accounts/filterByDomain/{domain}:
+    get:
+      tags:
+      - accounts
+      summary: List of email accounts for a domain
+      description: Returns a list of all email accounts for a given domain
+      operationId: getAccountsByDomain
+      parameters:
+        - name: domain
+          description: Domain for which we want the list of email accounts
+          in: path
+          required: true
+          schema:
+            type: string
+            example: example.com
+      responses:
+        '200':
+          description: List of email accounts for the specified domain
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /accounts/{emailAddress}:
+    get:
+      tags:
+      - accounts
+      summary: Get data from an email account
+      description: Returns data relating to an email account
+      operationId: getAccount
+      parameters:
+        - name: emailAddress
+          in: path
+          description: Email address to obtain account data
+          required: true
+          schema:
+            $ref: '#/components/schemas/EmailAddress'
+      responses:
+        '200':
+          description: Account details obtained successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+    delete:
+      tags:
+      - accounts
+      summary: Remove an email account
+      description: Remove an email account from the email server
+      operationId: deleteAccount
+      parameters:
+        - name: emailAddress
+          in: path
+          description: Email address that should be deleted
+          required: true
+          schema:
+            $ref: '#/components/schemas/EmailAddress'
+      responses:
+        '204':
+          description: Email address has been deleted
+        default:
+          description: An unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'                
+  /accounts/changePassword:
+    post:
+      summary: 'Change account password'
+      operationId: updateAccountPassword
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeAccountPassword'
+        required: true
+      responses:
+        '204':
+          description: Account password has been updated successfully
+        default:
+          description: An unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'                         
+
+                
+  /addresses-aliases:
+    get:
+      tags:
+      - addressesAliases
+      summary: Get all email aliases
+      description: |-
+        Returns a list of all email aliases registered on the email server.
+      operationId: getAddressAliases
+      responses:
+        '200':
+          description: List of all registered email aliases
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AddressAlias'
+                  
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+      - addressesAliases
+      summary: Create an email alias
+      description: Adds a new email alias
+      operationId: createAddressAlias
+      requestBody:
+        description: Adds a new email alias
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddressAlias'
+        required: true
+      responses:
+        '200':
+          description: The new email alias has been created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressAlias'
+        default:
+          description: An unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /addresses-aliases/{alias}:
+    put:
+      tags:
+      - addressesAliases
+      summary: Update an email alias
+      description: Updates data for an email alias
+      operationId: updateAddressAlias
+      parameters:
+      - name: alias
+        description: Email alias
+        in: path
+        required: true
+        schema:
+          type: string
+          example: dome@example.com
+      requestBody:
+        description: Change your email alias
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddressAlias'
+        required: true
+      responses:
+        '200':
+          description: Email alias updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressAlias'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        
+    delete:
+      tags:
+      - addressesAliases
+      summary: Deletes an email alias
+      description: Remove an email alias from the email server
+      operationId: deleteAddressAlias
+      parameters:
+      - name: alias
+        description: Email alias to be deleted
+        in: path
+        required: true
+        schema:
+          type: string
+          example: nome@example.com
+      responses:
+        '204':
+          description: Email alias successfully deleted.
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /addresses-aliases/filterByDomain/{domain}:
+    get:
+      tags:
+      - addressesAliases
+      summary: Get all email aliases
+      description: |-
+        Returns a list of all email aliases registered on the email server.
+      operationId: getAddressAliasesByDomain
+      parameters:
+        - name: domain
+          description: Domain by which you want to filter the list of email aliases
+          required: true
+          in: path
+          schema:
+            type: string
+            example: example.com
+      responses:
+        '200':
+          description: List of all email aliases that contain the filter domain
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AddressAlias'
+                  
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+                
+          
+components:
+  schemas:
+    Auth:
+      description: Authentication credentials
+      type: object
+      required:
+      - username
+      - password
+      properties:
+        username:
+          type: string
+          example: username
+        password:
+          type: string
+          example: userpassword
+    GetTokenResponse:
+      description: JWT Access Token
+      type: object
+      required:
+      - accessToken
+      properties:
+        accessToken:
+          type: string
+    Domain:
+      description: "Domain of an email address (e.g. @example.com)"
+      type: object
+      required:
+      - domain
+      properties:
+        domain:
+          type: string
+          description: Domínio
+          example: example.com
+    DomainAlias:
+      description: "Alias for an email domain (e.g. @example.net)"
+      type: object
+      required:
+        - alias
+        - domain
+      properties:
+        alias:
+          type: string
+          example: example.net
+        domain:
+          type: string
+          example: example.com
+          
+    Account:
+      type: object
+      required:
+      - name
+      - domain
+      properties:
+        name:
+          type: string
+          example: gilberto
+        domain:
+          type: string
+          example: example.com
+    NewAccount:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 2
+          example: gilberto
+        domain:
+          type: string
+          example: example.com
+        password:
+          type: string
+          minLength: 6
+          example: P455w0Rd
+      required:
+        - name
+        - domain
+        - password
+    ChangeAccountPassword:
+      type: object
+      required:
+      - emailAddress
+      - newPassword
+      properties:
+        emailAddress:
+          type: string
+          pattern: "^[A-Za-z0-9+_.-]+@(.+)$"
+          example: gilberto@example.com
+        newPassword:
+          type: string
+          minLength: 6
+    EmailAddress:
+      type: string
+      pattern: "^[A-Za-z0-9+_.-]+@(.+)$"
+      example: gilberto@example.com
+    AddressAlias:
+      type: object
+      required:
+      - alias
+      - addresses
+      properties:
+        alias:
+          type: string
+          pattern: "^[A-Za-z0-9+_.-]+@(.+)$"
+          example: dep.ti@example.com
+        addresses:
+          type: string
+          pattern: "^[\\W]*([\\w+\\-.%]+@[\\w\\-.]+\\.[A-Za-z]{2,4}[\\W]*,{1}[\\W]*)*([\\w+\\-.%]+@[\\w\\-.]+\\.[A-Za-z]{2,4})[\\W]*$"
+          example: ti@example.com, ti2@example.com, ti3@example.com
+      
+    Error:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error code
+        message:
+          type: string
+          description: Error message
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - BearerAuth: [ ]
+
+    

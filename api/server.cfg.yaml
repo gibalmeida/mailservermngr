@@ -1,0 +1,8 @@
+package: api
+output: internal/adapter/http/api/server.gen.go
+additional-imports:
+  - package: github.com/gibalmeida/mailservermngr/internal/adapter/http/api/model
+    alias: .
+generate:
+  echo-server: true
+  embedded-spec: true

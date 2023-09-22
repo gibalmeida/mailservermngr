@@ -1,0 +1,4 @@
+package: model
+generate:
+  models: true
+output: internal/adapter/http/api/model/models.gen.go

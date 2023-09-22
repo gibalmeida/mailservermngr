@@ -19,3 +19,11 @@
 
 # Go workspace file
 go.work
+
+
+# Environment Variables
+.env
+**/.env
+
+# Private Keys
+*.pem
