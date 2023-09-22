@@ -70,21 +70,6 @@ func main() {
 	// We now register our mailServer above as the handler for the interface
 	api.RegisterHandlersWithBaseURL(e, mailServerServer, "/api/v1")
 
-	// // We're going to print some useful things for interacting with this server.
-	// // This token allows access to any API's with no specific claims.
-	// readerJWS, err := jwsAuth.CreateJWSWithClaims([]string{})
-	// if err != nil {
-	// 	log.Fatalln("error creating reader JWS:", err)
-	// }
-	// // This token allows access to API's with no scopes, and with the "things:w" claim.
-	// writerJWS, err := jwsAuth.CreateJWSWithClaims([]string{"mailserver:w"})
-	// if err != nil {
-	// 	log.Fatalln("error creating writer JWS:", err)
-	// }
-
-	// log.Println("Reader token", string(readerJWS))
-	// log.Println("Writer token", string(writerJWS))
-
 	// And we serve HTTP until the world ends.
 	e.Logger.Fatal(e.Start(net.JoinHostPort("0.0.0.0", cfg.HttpPort)))
 }
