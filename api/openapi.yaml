@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: "An API for an Database used by Exim Mail Server"
+  title: "Mail Server Manager API"
   description: |-
     This is an API specification used to manager a database that is used by an Exim4 server as your accounts and domains.
   contact:
@@ -325,6 +325,8 @@ paths:
                 $ref: '#/components/schemas/Error'                
   /accounts/changePassword:
     post:
+      tags:
+      - accounts
       summary: 'Change account password'
       operationId: updateAccountPassword
       requestBody:
