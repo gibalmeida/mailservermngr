@@ -27,6 +27,7 @@ type MailServerRepository interface {
 	DeleteDomainAlias(ctx context.Context, alias string) error
 	GetDomainAlias(ctx context.Context, alias string) (*domain.DomainAlias, error)
 	GetDomainsAliases(ctx context.Context) ([]*domain.DomainAlias, error)
+	GetDomainsAliasesByDomain(ctx context.Context, emailDomain string) ([]*domain.DomainAlias, error)
 }
 
 type MailServerUseCase interface {
@@ -50,4 +51,5 @@ type MailServerUseCase interface {
 	DeleteDomainAlias(ctx context.Context, alias string) error
 	GetDomainAlias(ctx context.Context, alias string) (*domain.DomainAlias, error)
 	GetDomainsAliases(ctx context.Context) ([]*domain.DomainAlias, error)
+	GetDomainsAliasesByDomain(ctx context.Context, emailDomain string) ([]*domain.DomainAlias, error)
 }

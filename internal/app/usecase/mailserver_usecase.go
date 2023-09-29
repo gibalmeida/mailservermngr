@@ -165,6 +165,10 @@ func (u *mailServerUseCase) GetDomains(ctx context.Context) ([]*domain.Domain, e
 	return u.repo.GetDomains(ctx)
 }
 
+func (u *mailServerUseCase) GetDomainsAliasesByDomain(ctx context.Context, emailDomain string) ([]*domain.DomainAlias, error) {
+	return u.repo.GetDomainsAliasesByDomain(ctx, emailDomain)
+}
+
 func (u *mailServerUseCase) CreateDomainAlias(ctx context.Context, alias, emailDomain string) error {
 	domainAlrearyRegistered, err := u.domainOrDomainAliasExist(ctx, alias)
 	if err != nil {

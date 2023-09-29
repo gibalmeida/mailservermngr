@@ -260,6 +260,17 @@ func (m *Server) CreateDomainAlias(ctx echo.Context) error {
 	return ctx.JSON(http.StatusCreated, domainAlias)
 }
 
+// (GET /addresses-aliases/filterByDomain/{domain})
+func (m *Server) GetDomainsAliasesByDomain(ctx echo.Context, domain string) error {
+	result, err := m.mailServerUseCase.GetDomainsAliasesByDomain(ctx.Request().Context(), domain)
+
+	if err != nil {
+		return sendBadRequestOrInternalServerError(ctx, err)
+	}
+
+	return ctx.JSON(http.StatusOK, result)
+}
+
 // (DELETE /domains-aliases/{domain_alias})
 func (m *Server) DeleteDomainAlias(ctx echo.Context, domainAlias string) error {
 

@@ -303,6 +303,21 @@ func (mr *MockMailServerRepositoryMockRecorder) GetDomainsAliases(ctx any) *gomo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDomainsAliases", reflect.TypeOf((*MockMailServerRepository)(nil).GetDomainsAliases), ctx)
 }
 
+// GetDomainsAliasesByDomain mocks base method.
+func (m *MockMailServerRepository) GetDomainsAliasesByDomain(ctx context.Context, emailDomain string) ([]*domain.DomainAlias, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetDomainsAliasesByDomain", ctx, emailDomain)
+	ret0, _ := ret[0].([]*domain.DomainAlias)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetDomainsAliasesByDomain indicates an expected call of GetDomainsAliasesByDomain.
+func (mr *MockMailServerRepositoryMockRecorder) GetDomainsAliasesByDomain(ctx, emailDomain any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDomainsAliasesByDomain", reflect.TypeOf((*MockMailServerRepository)(nil).GetDomainsAliasesByDomain), ctx, emailDomain)
+}
+
 // UpdateAccountPassword mocks base method.
 func (m *MockMailServerRepository) UpdateAccountPassword(ctx context.Context, name, domain, clearTextPassword string) error {
 	m.ctrl.T.Helper()
@@ -615,6 +630,21 @@ func (m *MockMailServerUseCase) GetDomainsAliases(ctx context.Context) ([]*domai
 func (mr *MockMailServerUseCaseMockRecorder) GetDomainsAliases(ctx any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDomainsAliases", reflect.TypeOf((*MockMailServerUseCase)(nil).GetDomainsAliases), ctx)
+}
+
+// GetDomainsAliasesByDomain mocks base method.
+func (m *MockMailServerUseCase) GetDomainsAliasesByDomain(ctx context.Context, emailDomain string) ([]*domain.DomainAlias, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetDomainsAliasesByDomain", ctx, emailDomain)
+	ret0, _ := ret[0].([]*domain.DomainAlias)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetDomainsAliasesByDomain indicates an expected call of GetDomainsAliasesByDomain.
+func (mr *MockMailServerUseCaseMockRecorder) GetDomainsAliasesByDomain(ctx, emailDomain any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDomainsAliasesByDomain", reflect.TypeOf((*MockMailServerUseCase)(nil).GetDomainsAliasesByDomain), ctx, emailDomain)
 }
 
 // UpdateAccountPassword mocks base method.

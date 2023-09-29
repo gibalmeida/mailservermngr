@@ -198,6 +198,38 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /domains-aliases/filterByDomain/{domain}:
+    get:
+      tags:
+      - domainsAliases
+      summary: Get Domains Aliases filtered by Domain
+      description: |-
+        Returns a list of domains aliases registered at the server.
+      operationId: getDomainsAliasesByDomain
+      parameters:
+        - name: domain
+          description: Domain by which you want to filter the list of domain aliases
+          required: true
+          in: path
+          schema:
+            type: string
+            example: example.com
+      responses:
+        '200':
+          description: List of all domains aliases that contain the filter domain
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DomainAlias'
+                  
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
       
   /accounts:
     get:

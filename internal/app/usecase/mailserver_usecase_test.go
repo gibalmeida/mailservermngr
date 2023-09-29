@@ -639,6 +639,42 @@ func TestGetDomains(t *testing.T) {
 	}
 }
 
+func TestGetDomainsAliasesByDomain(t *testing.T) {
+
+	testCases := []struct {
+		desc   string
+		domain string
+		length int
+		err    error
+	}{
+		{
+			desc:   "success",
+			domain: "test.com",
+			length: 1,
+		},
+		{
+			desc:   "empty",
+			domain: "nonexist.com",
+			length: 0,
+		},
+	}
+
+	ctx, uc, teardownTestCase := setupMailServerTestCase(t)
+	defer teardownTestCase(t)
+
+	for _, tc := range testCases {
+		t.Run(tc.desc, func(t *testing.T) {
+			result, err := uc.GetDomainsAliasesByDomain(ctx, tc.domain)
+			if tc.err == nil {
+				assert.Equal(t, tc.length, len(result))
+			} else if assert.Error(t, err) {
+				assert.Equal(t, tc.err, err)
+			}
+
+		})
+	}
+}
+
 func TestDeleteDomain(t *testing.T) {
 
 	testCases := []struct {

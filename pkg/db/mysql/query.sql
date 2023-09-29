@@ -84,6 +84,10 @@ WHERE alias = ? LIMIT 1;
 SELECT * FROM domain_alias
 ORDER BY alias;
 
+-- name: GetDomainsAliasesFilteredByDomain :many
+SELECT alias, domain FROM domain_alias
+WHERE domain = ? ORDER BY alias;
+
 -- name: UpdateDomainAlias :exec
 UPDATE domain_alias
 SET domain = ?

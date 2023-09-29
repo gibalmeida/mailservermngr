@@ -283,6 +283,26 @@ func (r MysqlMailServerRepository) GetDomainsAliases(ctx context.Context) ([]*do
 	return result, nil
 }
 
+func (r MysqlMailServerRepository) GetDomainsAliasesByDomain(ctx context.Context, addressDomain string) ([]*domain.DomainAlias, error) {
+	var result []*domain.DomainAlias
+
+	domainsAliases, err := r.queries.GetDomainsAliasesFilteredByDomain(ctx, addressDomain)
+
+	if err != nil {
+		return result, err
+	}
+
+	for _, domainAlias := range domainsAliases {
+		result = append(result,
+			&domain.DomainAlias{
+				Alias:  domainAlias.Alias,
+				Domain: domainAlias.Alias,
+			})
+	}
+
+	return result, nil
+}
+
 func (r MysqlMailServerRepository) CreateDomain(ctx context.Context, emailDomain string) error {
 	_, err := r.queries.CreateDomain(ctx, emailDomain)
 

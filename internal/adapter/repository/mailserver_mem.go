@@ -271,6 +271,20 @@ func (r MemMailServerRepository) GetDomainsAliases(ctx context.Context) ([]*doma
 	return domainsAliases, nil
 }
 
+func (r MemMailServerRepository) GetDomainsAliasesByDomain(ctx context.Context, emailDomain string) ([]*domain.DomainAlias, error) {
+	r.lock.RLock()
+	defer r.lock.RUnlock()
+
+	domainsAliases := []*domain.DomainAlias{}
+
+	for _, a := range r.DomainsAliases {
+		if a.Domain == emailDomain {
+			domainsAliases = append(domainsAliases, a)
+		}
+	}
+	return domainsAliases, nil
+}
+
 func (r MemMailServerRepository) CreateDomain(ctx context.Context, emailDomain string) error {
 	r.lock.Lock()
 	defer r.lock.Unlock()

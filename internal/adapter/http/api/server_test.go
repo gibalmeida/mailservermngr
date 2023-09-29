@@ -416,6 +416,30 @@ func TestAPI(t *testing.T) {
 		require.Equal(t, expected, result)
 	})
 
+	t.Run("Sucessfully get all domain aliases filtered by domain", func(t *testing.T) {
+
+		filter := "domain.com"
+		mockReturn := []*domain.DomainAlias{{Alias: "email@alias.com", Domain: "email@domain.com"}}
+		expected := []model.DomainAlias{{Alias: "email@alias.com", Domain: "email@domain.com"}}
+
+		mockMailSrvUseCase.EXPECT().
+			GetDomainsAliasesByDomain(gomock.Any(), filter).
+			Times(1).
+			Return(mockReturn, nil)
+		response := testutil.NewRequest().Get(fmt.Sprintf("/domains-aliases/filterByDomain/%s", filter)).
+			WithJWSAuth(string(jwt)).
+			WithAcceptJson().
+			Go(t, e)
+
+		require.Equal(t, http.StatusOK, response.Code())
+
+		var result []model.DomainAlias
+		err = response.UnmarshalBodyToObject(&result)
+		assert.NoError(t, err, "error unmarshaling response")
+
+		require.Equal(t, expected, result)
+	})
+
 	t.Run("Sucessfully creates an address alias", func(t *testing.T) {
 		alias := "email@alias.com"
 		addresses := "email@domain.com"

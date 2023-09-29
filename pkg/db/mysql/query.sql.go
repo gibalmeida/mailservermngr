@@ -365,6 +365,34 @@ func (q *Queries) GetDomainsAliases(ctx context.Context) ([]DomainAlias, error) 
 	return items, nil
 }
 
+const getDomainsAliasesFilteredByDomain = `-- name: GetDomainsAliasesFilteredByDomain :many
+SELECT alias, domain FROM domain_alias
+WHERE domain = ? ORDER BY alias
+`
+
+func (q *Queries) GetDomainsAliasesFilteredByDomain(ctx context.Context, domain string) ([]DomainAlias, error) {
+	rows, err := q.db.QueryContext(ctx, getDomainsAliasesFilteredByDomain, domain)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []DomainAlias
+	for rows.Next() {
+		var i DomainAlias
+		if err := rows.Scan(&i.Alias, &i.Domain); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateAccountPassword = `-- name: UpdateAccountPassword :exec
 UPDATE account 
 SET password = ?
