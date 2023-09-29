@@ -224,7 +224,7 @@ func (r MysqlMailServerRepository) GetAddressesAliasesByDomain(ctx context.Conte
 		result = append(result,
 			&domain.AddressAlias{
 				Alias:     addressAlias.Alias,
-				Addresses: addressAlias.Alias,
+				Addresses: addressAlias.Addresses.String,
 			})
 	}
 
@@ -296,7 +296,7 @@ func (r MysqlMailServerRepository) GetDomainsAliasesByDomain(ctx context.Context
 		result = append(result,
 			&domain.DomainAlias{
 				Alias:  domainAlias.Alias,
-				Domain: domainAlias.Alias,
+				Domain: domainAlias.Domain,
 			})
 	}
 
