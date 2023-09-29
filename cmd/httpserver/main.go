@@ -8,6 +8,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	echomiddleware "github.com/labstack/echo/v4/middleware"
 
 	"github.com/gibalmeida/mailservermngr/internal/adapter/http/api"
@@ -60,6 +61,12 @@ func main() {
 	// Log all requests
 	e.Use(echomiddleware.Logger())
 
+	// TODO: it's necessary a way to setting the CORS Allow Origins from an environment variable
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"https://localhost", "http://localhost:5173"},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
+	}))
+
 	e.Use(mw...)
 
 	authUseCase := usecase.NewAuthUseCase(authRepo, jwsAuth)
@@ -68,7 +75,7 @@ func main() {
 	mailServerServer := api.NewServer(authUseCase, mailServerUseCase)
 
 	// We now register our mailServer above as the handler for the interface
-	api.RegisterHandlersWithBaseURL(e, mailServerServer, "/api/v1")
+	api.RegisterHandlers(e, mailServerServer)
 
 	// And we serve HTTP until the world ends.
 	e.Logger.Fatal(e.Start(net.JoinHostPort("0.0.0.0", cfg.HttpPort)))
