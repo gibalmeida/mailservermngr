@@ -15,8 +15,8 @@ type Account struct {
 
 // AddressAlias defines model for AddressAlias.
 type AddressAlias struct {
-	Addresses string `json:"addresses"`
-	Alias     string `json:"alias"`
+	Addresses []EmailAddress `json:"addresses"`
+	Alias     EmailAddress   `json:"alias"`
 }
 
 // Auth Authentication credentials
@@ -27,8 +27,8 @@ type Auth struct {
 
 // ChangeAccountPassword defines model for ChangeAccountPassword.
 type ChangeAccountPassword struct {
-	EmailAddress string `json:"emailAddress"`
-	NewPassword  string `json:"newPassword"`
+	EmailAddress EmailAddress `json:"emailAddress"`
+	NewPassword  string       `json:"newPassword"`
 }
 
 // Domain Domain of an email address (e.g. @example.com)

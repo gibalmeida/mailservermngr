@@ -73,13 +73,13 @@ func (u *mailServerUseCase) GetAccountsByDomain(ctx context.Context, emailDomain
 	return u.repo.GetAccountsByDomain(ctx, emailDomain)
 }
 
-func (u *mailServerUseCase) CreateAddressAlias(ctx context.Context, alias, addresses string) error {
-	_, err := u.repo.GetAddressAlias(ctx, alias)
+func (u *mailServerUseCase) CreateAddressAlias(ctx context.Context, addressAlias domain.AddressAlias) error {
+	_, err := u.repo.GetAddressAlias(ctx, addressAlias.Alias)
 	if err == nil {
 		return apperror.ErrAddressAliasAlreadyExist
 	}
 
-	splittedEmailAddress := strings.Split(alias, "@")
+	splittedEmailAddress := strings.Split(addressAlias.Alias, "@")
 
 	domainExist, err := u.domainOrDomainAliasExist(ctx, splittedEmailAddress[1])
 	if err != nil {
@@ -95,7 +95,7 @@ func (u *mailServerUseCase) CreateAddressAlias(ctx context.Context, alias, addre
 		return err
 	}
 
-	return u.repo.CreateAddressAlias(ctx, alias, addresses)
+	return u.repo.CreateAddressAlias(ctx, addressAlias)
 }
 
 func (u *mailServerUseCase) UpdateAddressAlias(ctx context.Context, addressAlias domain.AddressAlias) (*domain.AddressAlias, error) {

@@ -56,10 +56,10 @@ export interface AddressAlias {
     'alias': string;
     /**
      * 
-     * @type {string}
+     * @type {Array<string>}
      * @memberof AddressAlias
      */
-    'addresses': string;
+    'addresses': Array<string>;
 }
 /**
  * Authentication credentials

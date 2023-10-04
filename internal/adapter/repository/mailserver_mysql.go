@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"strings"
 
 	"github.com/gibalmeida/mailservermngr/internal/app/apperror"
 	"github.com/gibalmeida/mailservermngr/internal/domain"
@@ -141,10 +142,10 @@ func (r MysqlMailServerRepository) GetAccountsByDomain(ctx context.Context, addr
 
 }
 
-func (r MysqlMailServerRepository) CreateAddressAlias(ctx context.Context, alias string, addresses string) error {
+func (r MysqlMailServerRepository) CreateAddressAlias(ctx context.Context, addressAlias domain.AddressAlias) error {
 	_, err := r.queries.CreateAddressAlias(ctx, mysql.CreateAddressAliasParams{
-		Alias:     alias,
-		Addresses: sql.NullString{String: addresses, Valid: true},
+		Alias:     addressAlias.Alias,
+		Addresses: sql.NullString{String: strings.Join(addressAlias.Addresses, ","), Valid: true},
 	})
 
 	return err
@@ -160,7 +161,7 @@ func (r MysqlMailServerRepository) UpdateAddressAlias(ctx context.Context, addre
 	err := r.queries.UpdateAddressAlias(ctx, mysql.UpdateAddressAliasParams{
 		Alias: addressAlias.Alias,
 		Addresses: sql.NullString{
-			String: addressAlias.Addresses,
+			String: strings.Join(addressAlias.Addresses, ","),
 			Valid:  true,
 		},
 	})
@@ -170,7 +171,7 @@ func (r MysqlMailServerRepository) UpdateAddressAlias(ctx context.Context, addre
 
 	result, err := r.queries.GetAddressAlias(ctx, addressAlias.Alias)
 
-	return &domain.AddressAlias{Alias: result.Alias, Addresses: result.Addresses.String}, err
+	return &domain.AddressAlias{Alias: result.Alias, Addresses: utils.SplitAndTrimSpaces(result.Addresses.String)}, err
 }
 
 func (r MysqlMailServerRepository) GetAddressAlias(ctx context.Context, alias string) (*domain.AddressAlias, error) {
@@ -184,7 +185,7 @@ func (r MysqlMailServerRepository) GetAddressAlias(ctx context.Context, alias st
 		return result, err
 	} else {
 		result.Alias = addressAlias.Alias
-		result.Addresses = addressAlias.Addresses.String
+		result.Addresses = utils.SplitAndTrimSpaces(addressAlias.Addresses.String)
 	}
 
 	return result, nil
@@ -204,7 +205,7 @@ func (r MysqlMailServerRepository) GetAddressesAliases(ctx context.Context) ([]*
 		result = append(result,
 			&domain.AddressAlias{
 				Alias:     addressAlias.Alias,
-				Addresses: addressAlias.Addresses.String,
+				Addresses: utils.SplitAndTrimSpaces(addressAlias.Addresses.String),
 			})
 	}
 
@@ -224,7 +225,7 @@ func (r MysqlMailServerRepository) GetAddressesAliasesByDomain(ctx context.Conte
 		result = append(result,
 			&domain.AddressAlias{
 				Alias:     addressAlias.Alias,
-				Addresses: addressAlias.Addresses.String,
+				Addresses: utils.SplitAndTrimSpaces(addressAlias.Addresses.String),
 			})
 	}
 

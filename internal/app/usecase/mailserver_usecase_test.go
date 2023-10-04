@@ -29,9 +29,9 @@ func setupMailServerTestCase(t *testing.T) (context.Context, port.MailServerUseC
 	_ = uc.CreateAccount(ctx, domain.NewAccount{Name: "exist", Domain: "test.com", Password: "pass"})
 	_ = uc.CreateAccount(ctx, domain.NewAccount{Name: "email", Domain: "test2.com", Password: "pass"})
 	_ = uc.CreateAccount(ctx, domain.NewAccount{Name: "email", Domain: "test3.com", Password: "pass"})
-	_ = uc.CreateAddressAlias(ctx, "alias@test.com", "exist@test.com")
-	_ = uc.CreateAddressAlias(ctx, "alias@test2.com", "email@test2.com")
-	_ = uc.CreateAddressAlias(ctx, "alias@test3.com", "email@test3.com")
+	_ = uc.CreateAddressAlias(ctx, domain.AddressAlias{Alias: "alias@test.com", Addresses: []domain.EmailAddress{"exist@test.com"}})
+	_ = uc.CreateAddressAlias(ctx, domain.AddressAlias{Alias: "alias@test2.com", Addresses: []domain.EmailAddress{"email@test2.com"}})
+	_ = uc.CreateAddressAlias(ctx, domain.AddressAlias{Alias: "alias@test3.com", Addresses: []domain.EmailAddress{"email@test3.com"}})
 
 	return ctx, uc, func(t *testing.T) {
 		t.Log("teardown test case")
@@ -305,7 +305,7 @@ func TestGetAddressAlias(t *testing.T) {
 			alias: "alias@test.com",
 			result: &domain.AddressAlias{
 				Alias:     "alias@test.com",
-				Addresses: "exist@test.com",
+				Addresses: []domain.EmailAddress{"exist@test.com"},
 			},
 		},
 		{
@@ -407,14 +407,14 @@ func TestCreateAddressAlias(t *testing.T) {
 			desc: "success",
 			addressAlias: &domain.AddressAlias{
 				Alias:     "newalias@test.com",
-				Addresses: "exist@domain.com",
+				Addresses: []domain.EmailAddress{"exist@domain.com"},
 			},
 		},
 		{
 			desc: "address alias already exist",
 			addressAlias: &domain.AddressAlias{
 				Alias:     "alias@test.com",
-				Addresses: "exist@test.com",
+				Addresses: []domain.EmailAddress{"exist@test.com"},
 			},
 			err: apperror.ErrAddressAliasAlreadyExist,
 		},
@@ -422,7 +422,7 @@ func TestCreateAddressAlias(t *testing.T) {
 			desc: "domain or domain alias doesn't exist",
 			addressAlias: &domain.AddressAlias{
 				Alias:     "secondalias@nonexist.com",
-				Addresses: "exist@test.com",
+				Addresses: []domain.EmailAddress{"exist@test.com"},
 			},
 			err: apperror.ErrDomainOrDomainAliasNotExist,
 		},
@@ -430,7 +430,7 @@ func TestCreateAddressAlias(t *testing.T) {
 			desc: "already exist as a regular address",
 			addressAlias: &domain.AddressAlias{
 				Alias:     "email@test2.com",
-				Addresses: "exist@test.com",
+				Addresses: []domain.EmailAddress{"exist@test.com"},
 			},
 			err: apperror.ErrAddressAliasAlreadyExistAsRegular,
 		},
@@ -441,7 +441,7 @@ func TestCreateAddressAlias(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.desc, func(t *testing.T) {
-			err := uc.CreateAddressAlias(ctx, tc.addressAlias.Alias, tc.addressAlias.Addresses)
+			err := uc.CreateAddressAlias(ctx, *tc.addressAlias)
 			if tc.err == nil {
 				assert.NoError(t, err)
 			} else if assert.Error(t, err) {
@@ -497,14 +497,14 @@ func TestUpdateAddressAlias(t *testing.T) {
 			desc: "success",
 			addressAlias: &domain.AddressAlias{
 				Alias:     "alias@test.com",
-				Addresses: "exist@test.com, email@test2.com, email@test3.com",
+				Addresses: []domain.EmailAddress{"exist@test.com", "email@test2.com", "email@test3.com"},
 			},
 		},
 		{
 			desc: "address alias doesn't exist",
 			addressAlias: &domain.AddressAlias{
 				Alias:     "nonexist@test.com",
-				Addresses: "email@test2.com",
+				Addresses: []domain.EmailAddress{"email@test2.com"},
 			},
 			err: apperror.ErrAddressAliasNotExist,
 		},

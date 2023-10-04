@@ -442,12 +442,12 @@ func TestAPI(t *testing.T) {
 
 	t.Run("Sucessfully creates an address alias", func(t *testing.T) {
 		alias := "email@alias.com"
-		addresses := "email@domain.com"
-		param := model.AddressAlias{Alias: alias, Addresses: addresses}
-		expected := model.AddressAlias{Alias: alias, Addresses: addresses}
+		address := "email@domain.com"
+		param := domain.AddressAlias{Alias: alias, Addresses: []model.EmailAddress{address}}
+		expected := model.AddressAlias{Alias: alias, Addresses: []model.EmailAddress{address}}
 
 		mockMailSrvUseCase.EXPECT().
-			CreateAddressAlias(gomock.Any(), alias, addresses).
+			CreateAddressAlias(gomock.Any(), param).
 			Times(1).
 			Return(nil)
 		response := testutil.NewRequest().Post("/addresses-aliases").
@@ -462,23 +462,6 @@ func TestAPI(t *testing.T) {
 		assert.NoError(t, err, "error unmarshaling response")
 
 		require.Equal(t, expected, result)
-
-	})
-
-	t.Run("Get a Bad Request Status when try creates an address alias with wrong format at addresses list", func(t *testing.T) {
-		alias := "alias@example.com"
-		addresses := "email@domain.com,email2@domain.com email3@domain.com" // there is a missing comma between email2 and email3
-		param := model.AddressAlias{Alias: alias, Addresses: addresses}
-
-		mockMailSrvUseCase.EXPECT().
-			CreateAddressAlias(gomock.Any(), alias, addresses).
-			Times(0)
-		response := testutil.NewRequest().Post("/addresses-aliases").
-			WithJWSAuth(string(jwt)).
-			WithAcceptJson().
-			WithJsonBody(param).Go(t, e)
-
-		require.Equal(t, http.StatusBadRequest, response.Code())
 
 	})
 
@@ -499,9 +482,9 @@ func TestAPI(t *testing.T) {
 
 	t.Run("Sucessfully update an address alias", func(t *testing.T) {
 		alias := "email@alias.com"
-		addresses := "email@domain.com"
-		param := model.AddressAlias{Alias: alias, Addresses: addresses}
-		mockRet := &domain.AddressAlias{Alias: alias, Addresses: addresses}
+		address := "email@domain.com"
+		param := model.AddressAlias{Alias: alias, Addresses: []domain.EmailAddress{address}}
+		mockRet := &domain.AddressAlias{Alias: alias, Addresses: []domain.EmailAddress{address}}
 		expected := param
 
 		mockMailSrvUseCase.EXPECT().
@@ -525,8 +508,22 @@ func TestAPI(t *testing.T) {
 
 	t.Run("Sucessfully get all addresses aliases", func(t *testing.T) {
 
-		mockReturn := []*domain.AddressAlias{{Alias: "email@alias.com", Addresses: "email@domain.com"}}
-		expected := []model.AddressAlias{{Alias: "email@alias.com", Addresses: "email@domain.com"}}
+		mockReturn := []*domain.AddressAlias{
+			{
+				Alias: "email@alias.com",
+				Addresses: []domain.EmailAddress{
+					"email@domain.com",
+				},
+			},
+		}
+		expected := []model.AddressAlias{
+			{
+				Alias: "email@alias.com",
+				Addresses: []domain.EmailAddress{
+					"email@domain.com",
+				},
+			},
+		}
 
 		mockMailSrvUseCase.EXPECT().
 			GetAddressesAliases(gomock.Any()).
@@ -549,8 +546,22 @@ func TestAPI(t *testing.T) {
 	t.Run("Sucessfully get all addresses aliases filtered by domain", func(t *testing.T) {
 
 		filter := "domain.com"
-		mockReturn := []*domain.AddressAlias{{Alias: "email@alias.com", Addresses: "email@domain.com"}}
-		expected := []model.AddressAlias{{Alias: "email@alias.com", Addresses: "email@domain.com"}}
+		mockReturn := []*domain.AddressAlias{
+			{
+				Alias: "email@alias.com",
+				Addresses: []domain.EmailAddress{
+					"email@domain.com",
+				},
+			},
+		}
+		expected := []model.AddressAlias{
+			{
+				Alias: "email@alias.com",
+				Addresses: []domain.EmailAddress{
+					"email@domain.com",
+				},
+			},
+		}
 
 		mockMailSrvUseCase.EXPECT().
 			GetAddressesAliasesByDomain(gomock.Any(), filter).

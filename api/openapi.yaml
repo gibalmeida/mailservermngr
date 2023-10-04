@@ -606,9 +606,7 @@ components:
       - newPassword
       properties:
         emailAddress:
-          type: string
-          pattern: "^[A-Za-z0-9+_.-]+@(.+)$"
-          example: gilberto@example.com
+          $ref: '#/components/schemas/EmailAddress'
         newPassword:
           type: string
           minLength: 6
@@ -623,13 +621,11 @@ components:
       - addresses
       properties:
         alias:
-          type: string
-          pattern: "^[A-Za-z0-9+_.-]+@(.+)$"
-          example: dep.ti@example.com
+          $ref: '#/components/schemas/EmailAddress'
         addresses:
-          type: string
-          pattern: "^[\\W]*([\\w+\\-.%]+@[\\w\\-.]+\\.[A-Za-z]{2,4}[\\W]*,{1}[\\W]*)*([\\w+\\-.%]+@[\\w\\-.]+\\.[A-Za-z]{2,4})[\\W]*$"
-          example: ti@example.com, ti2@example.com, ti3@example.com
+          type: array
+          items:
+            $ref: '#/components/schemas/EmailAddress'
       
     Error:
       required:

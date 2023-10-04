@@ -15,8 +15,8 @@ type NewAccount struct {
 
 // AddressAlias defines model for Address Alias.
 type AddressAlias struct {
-	Addresses string `json:"addresses"`
-	Alias     string `json:"alias" validate:"email"`
+	Addresses []EmailAddress `json:"addresses"`
+	Alias     EmailAddress   `json:"alias"`
 }
 
 // Domain defines a model for an Internet Domain (ex: example.com)
@@ -30,3 +30,6 @@ type DomainAlias struct {
 	Alias  string `json:"alias"`
 	Domain string `json:"domain"`
 }
+
+// EmailAddress defines model for EmailAddress.
+type EmailAddress = string

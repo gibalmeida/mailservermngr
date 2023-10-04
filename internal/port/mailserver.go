@@ -13,7 +13,7 @@ type MailServerRepository interface {
 	DeleteAccount(ctx context.Context, name string, emailDomain string) error
 	GetAccounts(ctx context.Context) ([]*domain.Account, error)
 	GetAccountsByDomain(ctx context.Context, emailDomain string) ([]*domain.Account, error)
-	CreateAddressAlias(ctx context.Context, alias, addresses string) error
+	CreateAddressAlias(ctx context.Context, addressAlias domain.AddressAlias) error
 	DeleteAddressAlias(ctx context.Context, alias string) error
 	UpdateAddressAlias(ctx context.Context, addressAlias domain.AddressAlias) (*domain.AddressAlias, error)
 	GetAddressAlias(ctx context.Context, alias string) (*domain.AddressAlias, error)
@@ -37,7 +37,7 @@ type MailServerUseCase interface {
 	DeleteAccount(ctx context.Context, name string, emailDomain string) error
 	GetAccounts(ctx context.Context) ([]*domain.Account, error)
 	GetAccountsByDomain(ctx context.Context, emailDomain string) ([]*domain.Account, error)
-	CreateAddressAlias(ctx context.Context, alias, addresses string) error
+	CreateAddressAlias(ctx context.Context, addressAlias domain.AddressAlias) error
 	DeleteAddressAlias(ctx context.Context, alias string) error
 	UpdateAddressAlias(ctx context.Context, addressAlias domain.AddressAlias) (*domain.AddressAlias, error)
 	GetAddressAlias(ctx context.Context, alias string) (*domain.AddressAlias, error)

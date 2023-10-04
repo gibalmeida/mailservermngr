@@ -126,17 +126,17 @@ func (r MemMailServerRepository) GetAccountsByDomain(ctx context.Context, emailD
 
 }
 
-func (r MemMailServerRepository) CreateAddressAlias(ctx context.Context, alias string, addresses string) error {
+func (r MemMailServerRepository) CreateAddressAlias(ctx context.Context, addressAlias domain.AddressAlias) error {
 	r.lock.Lock()
 	defer r.lock.Unlock()
 
-	_, exist := r.AddressesAliases[alias]
+	_, exist := r.AddressesAliases[addressAlias.Alias]
 
 	if exist {
 		return apperror.ErrAddressAliasAlreadyExist
 	}
 
-	r.AddressesAliases[alias] = &domain.AddressAlias{Alias: alias, Addresses: addresses}
+	r.AddressesAliases[addressAlias.Alias] = &domain.AddressAlias{Alias: addressAlias.Alias, Addresses: addressAlias.Addresses}
 
 	return nil
 
@@ -208,7 +208,7 @@ func (r MemMailServerRepository) GetAddressesAliasesByDomain(ctx context.Context
 	addressesAliases := []*domain.AddressAlias{}
 
 	for _, a := range r.AddressesAliases {
-		if strings.Contains(a.Addresses, emailDomain) {
+		if strings.Contains(strings.Join(a.Addresses, ","), emailDomain) {
 			addressesAliases = append(addressesAliases, a)
 		}
 	}

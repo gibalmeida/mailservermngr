@@ -56,17 +56,17 @@ func (mr *MockMailServerRepositoryMockRecorder) CreateAccount(ctx, newAccount an
 }
 
 // CreateAddressAlias mocks base method.
-func (m *MockMailServerRepository) CreateAddressAlias(ctx context.Context, alias, addresses string) error {
+func (m *MockMailServerRepository) CreateAddressAlias(ctx context.Context, addressAlias domain.AddressAlias) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateAddressAlias", ctx, alias, addresses)
+	ret := m.ctrl.Call(m, "CreateAddressAlias", ctx, addressAlias)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // CreateAddressAlias indicates an expected call of CreateAddressAlias.
-func (mr *MockMailServerRepositoryMockRecorder) CreateAddressAlias(ctx, alias, addresses any) *gomock.Call {
+func (mr *MockMailServerRepositoryMockRecorder) CreateAddressAlias(ctx, addressAlias any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAddressAlias", reflect.TypeOf((*MockMailServerRepository)(nil).CreateAddressAlias), ctx, alias, addresses)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAddressAlias", reflect.TypeOf((*MockMailServerRepository)(nil).CreateAddressAlias), ctx, addressAlias)
 }
 
 // CreateDomain mocks base method.
@@ -385,17 +385,17 @@ func (mr *MockMailServerUseCaseMockRecorder) CreateAccount(ctx, newAccount any) 
 }
 
 // CreateAddressAlias mocks base method.
-func (m *MockMailServerUseCase) CreateAddressAlias(ctx context.Context, alias, addresses string) error {
+func (m *MockMailServerUseCase) CreateAddressAlias(ctx context.Context, addressAlias domain.AddressAlias) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateAddressAlias", ctx, alias, addresses)
+	ret := m.ctrl.Call(m, "CreateAddressAlias", ctx, addressAlias)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // CreateAddressAlias indicates an expected call of CreateAddressAlias.
-func (mr *MockMailServerUseCaseMockRecorder) CreateAddressAlias(ctx, alias, addresses any) *gomock.Call {
+func (mr *MockMailServerUseCaseMockRecorder) CreateAddressAlias(ctx, addressAlias any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAddressAlias", reflect.TypeOf((*MockMailServerUseCase)(nil).CreateAddressAlias), ctx, alias, addresses)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAddressAlias", reflect.TypeOf((*MockMailServerUseCase)(nil).CreateAddressAlias), ctx, addressAlias)
 }
 
 // CreateDomain mocks base method.

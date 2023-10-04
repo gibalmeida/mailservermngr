@@ -188,7 +188,7 @@ func (m *Server) CreateAddressAlias(ctx echo.Context) error {
 
 	ctx.Bind(&addressAlias)
 
-	if err := m.mailServerUseCase.CreateAddressAlias(ctx.Request().Context(), addressAlias.Alias, addressAlias.Addresses); err != nil {
+	if err := m.mailServerUseCase.CreateAddressAlias(ctx.Request().Context(), addressAlias); err != nil {
 		return sendBadRequestOrInternalServerError(ctx, err)
 	}
 
