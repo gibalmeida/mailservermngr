@@ -1,0 +1,2 @@
+- Perguntar se quer acessar como administrador ou como usuário. No caso do usuário permitir que ele recupere a senha ou troque a senha (se souber a atual)
+- Verificar se o token expirou e fazer o logoff, caso tenha expirado.
