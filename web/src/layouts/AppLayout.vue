@@ -7,7 +7,7 @@ import TheMenu from '@/components/TheMenu.vue'
     <TheMenu />
   </header>
   <main>
-    <div class="max-w-3xl mx-auto px-4 py-4 bg-gray-200 dark:bg-black dark:text-white flex shadow-lg rounded-lg dark:border-white dark:border-2 mt-8">
+    <div class="max-w-6xl mx-auto px-4 py-2 sm:p-4 bg-gray-400 dark:bg-black dark:text-white flex sm:shadow-lg sm:rounded-lg dark:border-white dark:border-2 sm:mt-4">
       <slot></slot>
     </div>
   </main>

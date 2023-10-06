@@ -15,10 +15,10 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 /* import specific icons */
-import { faBars, faClose, faRightFromBracket, faRightToBracket, faUserSecret, faPlus, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faBars, faClose, faRightFromBracket, faRightToBracket, faUserSecret, faPlus, faEdit, faTrash, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
 /* add icons to the library */
-library.add(faBars, faClose, faRightFromBracket, faRightToBracket, faUserSecret, faPlus, faEdit, faTrash)
+library.add(faBars, faClose, faRightFromBracket, faRightToBracket, faUserSecret, faPlus, faEdit, faTrash, faArrowLeft)
 
 const app = createApp(App)
 

@@ -37,9 +37,8 @@ function loadDomainObjects(domain: string) {
 }
 
 function newAccountButtonPressed() {
-  showNewAccountForm.value=true
-  newAccount.value = {name: '', domain: selectedDomain.value ?? ''}
-
+  showNewAccountForm.value = true
+  newAccount.value = { name: '', domain: selectedDomain.value ?? '' }
 }
 function editAccount(account: Account) {
   selectedAccount.value = account
@@ -59,132 +58,144 @@ function cancelAccountSelected() {
 
 <template>
   <AppLayout>
-    <div class="flex flex-col w-full">
-      <div class="flex flex-row">
-        <div class="flex flex-col" v-if="selectedDomain">
-          <div class="flex flex-row">
-            <div class="text-2xl font-semibold pr-2">Domain: {{ selectedDomain }}</div>
-            <div class="">
-              <button
-                class="bg-gray-500 px-4 rounded-lg font-extralight"
-                @click="cancelDomainSelected"
-                title="Cancel domain selection"
-              >
-                <fa-icon icon="fa-solid fa-close"></fa-icon>
-              </button>
-              <button class="bg-gray-500 px-4 rounded-lg font-extralight">
-                <fa-icon icon="fa-solid fa-trash"></fa-icon>
-              </button>
-            </div>
-          </div>
+    <div class="flex flex-row w-full">
+      <div
+        class="flex flex-col w-full sm:w-[40%] md:w-[30%] p-4 shadow-lg rounded-lg bg-gray-200 overflow-auto"
+        :class="{ 'hidden sm:flex': selectedDomain }"
+      >
+        <div>
+          <h1 class="text-2xl font-semibold">Local Domains</h1>
+          <p class="font-light text-xs">Please select one domain</p>
         </div>
-        <div class="flex flex-col w-full" v-else>
-          <div>
-            <h1 class="text-2xl font-semibold">Local Domains</h1>
-            <p class="font-light text-xs">Please select one domain</p>
-          </div>
-          <div class="mt-4 cursor-pointer">
-            <div
-              v-for="domain in domains"
-              :key="domain.domain"
-              class="order-b transition duration-300 ease-in-out hover:bg-neutral-600 dark:border-neutral-500 dark:hover:bg-neutral-600"
-              @click="loadDomainObjects(domain.domain)"
-            >
-              {{ domain.domain }}
-            </div>
+        <div class="mt-4 cursor-pointer">
+          <div
+            v-for="domain in domains"
+            :key="domain.domain"
+            class="order-b transition duration-300 ease-in-out hover:bg-neutral-600 dark:border-neutral-500 dark:hover:bg-neutral-600"
+            @click="loadDomainObjects(domain.domain)"
+          >
+            {{ domain.domain }}
           </div>
         </div>
       </div>
+      <div
+        class="flex flex-col w-full sm:w-[60%] md:w-[70%] p-4 sm:ml-4 shadow-lg rounded-lg bg-gray-200"
+        :class="{ hidden: !selectedDomain }"
+      >
+        <div class="flex flex-row">
+            <button @click="cancelDomainSelected" title="Cancel domain selection" class="sm:hidden">
+              <fa-icon icon="fa-solid fa-arrow-left"></fa-icon>
+            </button>
+          <p class="ml-2 text-2xl font-bold">{{ selectedDomain }}</p>
+        </div>
 
-      <div class="mb-4 border-b border-gray-200 dark:border-gray-700" v-if="selectedDomain">
-        <ul class="flex flex-wrap -mb-px text-sm font-medium text-center">
-          <li class="mr-2">
-            <button
-              class="inline-block p-2 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-              :class="{ ' border-black': tabActive == 'accounts' }"
-              type="button"
-              @click="tabActive = 'accounts'"
-            >
-              Accounts
-            </button>
-            <button class="bg-gray-500 px-2 rounded-lg font-extralight" @click="newAccountButtonPressed" v-if="!showNewAccountForm"><fa-icon icon="fa-solid fa-plus"></fa-icon></button>
-          </li>
-          <li class="mr-2">
-            <button
-              class="inline-block p-2 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-              :class="{ 'border-black': tabActive == 'domains-aliases' }"
-              type="button"
-              @click="tabActive = 'domains-aliases'"
-            >
-              Domains Aliases
-            </button>
-            <button class="bg-gray-500 px-2 rounded-lg font-extralight"><fa-icon icon="fa-solid fa-plus"></fa-icon></button>
-          </li>
-          <li class="mr-2">
-            <button
-              class="inline-block p-2 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-              :class="{ 'border-black': tabActive == 'addresses-aliases' }"
-              type="button"
-              @click="tabActive = 'addresses-aliases'"
-            >
-              Addreses Aliases
-            </button>
-            <button class="bg-gray-500 px-2 rounded-lg font-extralight"><fa-icon icon="fa-solid fa-plus"></fa-icon></button>
-          </li>
-        </ul>
-      </div>
-      <div v-if="selectedDomain" class="cursor-pointer">
-        <div class="py-2" v-if="tabActive == 'accounts'">
-          <div class="flex flex-col">
-            <div>
-              <div v-if="!selectedAccount">
-                <div v-if="!showNewAccountForm">
-                  <div
-                    v-for="account in accounts"
-                    :key="account.name + '@' + account.domain"
-                    class="border-b transition duration-300 ease-in-out hover:bg-neutral-600 dark:border-neutral-500 dark:hover:bg-neutral-600"
-                    @click="editAccount(account)"
-                  >
-                    {{ account.name + '@' + account.domain }}
+        <div
+          class="mt-4 mb-4 border-b border-gray-200 dark:border-gray-700"
+          :class="{ hidden: !selectedDomain }"
+        >
+          <ul class="flex flex-wrap -mb-px font-medium text-center justify-center">
+            <li class="mr-2">
+              <button
+                class="inline-block p-2 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+                :class="{ ' border-black': tabActive == 'accounts' }"
+                type="button"
+                @click="tabActive = 'accounts'"
+              >
+                Accounts
+              </button>
+              <button
+                class="bg-gray-500 px-2 rounded-lg font-extralight"
+                @click="newAccountButtonPressed"
+                v-if="!showNewAccountForm"
+              >
+                <fa-icon icon="fa-solid fa-plus"></fa-icon>
+              </button>
+            </li>
+            <li class="mr-2">
+              <button
+                class="inline-block p-2 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+                :class="{ 'border-black': tabActive == 'domains-aliases' }"
+                type="button"
+                @click="tabActive = 'domains-aliases'"
+              >
+                Domains Aliases
+              </button>
+              <button class="bg-gray-500 px-2 rounded-lg font-extralight">
+                <fa-icon icon="fa-solid fa-plus"></fa-icon>
+              </button>
+            </li>
+            <li class="mr-2">
+              <button
+                class="inline-block p-2 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+                :class="{ 'border-black': tabActive == 'addresses-aliases' }"
+                type="button"
+                @click="tabActive = 'addresses-aliases'"
+              >
+                Addreses Aliases
+              </button>
+              <button class="bg-gray-500 px-2 rounded-lg font-extralight">
+                <fa-icon icon="fa-solid fa-plus"></fa-icon>
+              </button>
+            </li>
+          </ul>
+        </div>
+        <div class="cursor-pointer" :class="{ hidden: !selectedDomain }">
+          <div class="py-2" v-if="tabActive == 'accounts'">
+            <div class="flex flex-col">
+              <div>
+                <div v-if="!selectedAccount">
+                  <div v-if="!showNewAccountForm">
+                    <div
+                      v-for="account in accounts"
+                      :key="account.name + '@' + account.domain"
+                      class="border-b transition duration-300 ease-in-out hover:bg-neutral-600 dark:border-neutral-500 dark:hover:bg-neutral-600"
+                      @click="editAccount(account)"
+                    >
+                      {{ account.name + '@' + account.domain }}
+                    </div>
+                  </div>
+                  <div v-else>
+                    <AccountForm
+                      v-bind:account="newAccount!"
+                      :cancel-button="() => (showNewAccountForm = false)"
+                      :new="true"
+                    ></AccountForm>
                   </div>
                 </div>
                 <div v-else>
-                  <AccountForm v-bind:account="newAccount!" :cancel-button="() => showNewAccountForm=false" :new="true"></AccountForm>
+                  <AccountForm
+                    v-bind:account="selectedAccount"
+                    :cancel-button="cancelAccountSelected"
+                    :new="false"
+                  ></AccountForm>
                 </div>
               </div>
-              <div v-else>
-                <AccountForm
-                  v-bind:account="selectedAccount"
-                  :cancel-button="cancelAccountSelected"
-                  :new="false"
-                ></AccountForm>
-              </div>
             </div>
           </div>
-        </div>
-        <div class="py-2" v-if="tabActive == 'domains-aliases'">
-          <div class="flex flex-col">
-            <div>
-              <div
-                v-for="domainAlias in domainsAliases"
-                :key="domainAlias.alias"
-                class="border-b transition duration-300 ease-in-out hover:bg-neutral-600 dark:border-neutral-500 dark:hover:bg-neutral-600"
-              >
-                {{ domainAlias.alias }}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="py-2" v-if="tabActive == 'addresses-aliases'">
-          <div class="flex flex-col">
+          <div class="py-2" v-if="tabActive == 'domains-aliases'">
             <div class="flex flex-col">
-              <div
-                v-for="addressAlias in addressesAliases"
-                :key="addressAlias.alias"
-                class="flex flex-row border-b transition duration-300 ease-in-out hover:bg-neutral-600 dark:border-neutral-500 dark:hover:bg-neutral-600"
-              >
-                <div class="w-[50%]">{{ addressAlias.alias }}</div>
-                <!-- <div>{{ addressAlias.addresses }}</div> -->
+              <div>
+                <div
+                  v-for="domainAlias in domainsAliases"
+                  :key="domainAlias.alias"
+                  class="border-b transition duration-300 ease-in-out hover:bg-neutral-600 dark:border-neutral-500 dark:hover:bg-neutral-600"
+                >
+                  {{ domainAlias.alias }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="py-2" v-if="tabActive == 'addresses-aliases'">
+            <div class="flex flex-col">
+              <div class="flex flex-col">
+                <div
+                  v-for="addressAlias in addressesAliases"
+                  :key="addressAlias.alias"
+                  class="flex flex-row border-b transition duration-300 ease-in-out hover:bg-neutral-600 dark:border-neutral-500 dark:hover:bg-neutral-600"
+                >
+                  <div class="w-[50%]">{{ addressAlias.alias }}</div>
+                  <!-- <div>{{ addressAlias.addresses }}</div> -->
+                </div>
               </div>
             </div>
           </div>

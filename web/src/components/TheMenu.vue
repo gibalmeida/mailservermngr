@@ -2,7 +2,6 @@
 import { Authenticator } from '@/repositories/authenticator'
 import router from '@/router'
 import { ref } from 'vue'
-import { RouterLink } from 'vue-router'
 
 const mobileMenuOpened = ref(false)
 
@@ -13,8 +12,8 @@ function logout() {
 </script>
 
 <template>
-  <nav class="flex justify-between items-center w-[92%] max-w-3xl mx-auto">
-    <div class="h-20 flex items-center gap-6 xl:text-xl">
+  <nav class="flex justify-between items-center w-[92%] max-w-6xl mx-auto">
+    <div class="h-14 flex items-center gap-6 xl:text-xl">
       <!-- <fa-icon
         v-if="!mobileMenuOpened"
         icon="fa-solid fa-bars"
